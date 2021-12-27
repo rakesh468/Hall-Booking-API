@@ -16,7 +16,7 @@ async function connection(){
     const client=new MongoClient(MONGO_URL)
     await client.connect()
     console.log(" Mongodb connected")
-    return client
+    return client;
 }
 //client global variable//
 const client=await connection();
@@ -26,11 +26,12 @@ app.get("/",(request,response)=>{
     response.send("welcome to Hotel Elite")
 })
 
-let room=[]
+let rooms=[]
 let bookingrecord=[]
+
 //post method to create room//
 app.post("/create_room",async(request,response)=>{
-    let rooms={}
+    let room={}
     if(request.body.no_of_seats) 
     room.no_of_seats=request.body.no_of_seats;
     else{
@@ -46,12 +47,13 @@ app.post("/create_room",async(request,response)=>{
     else{
     response.status(400).send({message:"Enter the price per hour"})
 }
-//push room into rooms//
-    rooms.push(room)
+
+    rooms.push(room);
     await client.db("Elite").collection("rooms").insertOne(room)
     room ?
     response.status(200).send({message:"Room created"}) :
     response.status(400).send({message:"Required details"})
+    console.log(room);
 })
 
 app.post("/booking",(request,response)=>{
@@ -76,8 +78,8 @@ app.post("/booking",(request,response)=>{
     }else{
         response.status(400).send({message:"Endtime Required"})
     }
-    if(request.body.customername){
-        booking.customername=request.body.customername
+    if(request.body.customer_name){
+        booking.customer_name=request.body.customer_name
     }else{
     response.status(400).send({message:"CustomerName Required"})
     }
@@ -85,8 +87,9 @@ app.post("/booking",(request,response)=>{
     bookingrecord.push(booking);
     client.db("Elite").collection("booking").insertOne(booking);
     bookingrecord ?
-    response.status(200).response({message:"Room Booked"}):
+    response.status(200).send({message:"Room Booked"}):
     response.status(400).send({message:"Details Required"})
+    console.log(bookingrecord);
 })
 //booking customer detail using get method
 app.get("/booked_customer",async(request,response)=>{
@@ -97,7 +100,7 @@ app.get("/booked_customer",async(request,response)=>{
 })
 //booking room details using get method//
 app.get("/book_room",async(request,response)=>{
-    const room=client.db("Elite").collection("rooms").find({}).toArray()
+    const room= await client.db("Elite").collection("rooms").find({}).toArray();
     room?
     response.status(200).send(room):
     response.status(400).send({message:"Server down"})
