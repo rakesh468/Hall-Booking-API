@@ -85,7 +85,7 @@ app.post("/booking",(request,response)=>{
     }
    //push booking into bookingrecord
     bookingrecord.push(booking);
-    client.db("Elite").collection("booking").insertOne(booking);
+    client.db("bwd28").collection("booking").insertOne(booking);
     bookingrecord ?
     response.status(200).send({message:"Room Booked"}):
     response.status(400).send({message:"Details Required"})
