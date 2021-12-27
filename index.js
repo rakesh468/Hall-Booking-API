@@ -49,7 +49,7 @@ app.post("/create_room",async(request,response)=>{
 }
 
     rooms.push(room);
-    await client.db("Elite").collection("rooms").insertOne(room)
+    await client.db("bwd28").collection("rooms").insertOne(room)
     room ?
     response.status(200).send({message:"Room created"}) :
     response.status(400).send({message:"Required details"})
@@ -93,14 +93,14 @@ app.post("/booking",(request,response)=>{
 })
 //booking customer detail using get method
 app.get("/booked_customer",async(request,response)=>{
-    const booked=await client.db("Elite").collection("booking").find({}).toArray();
+    const booked=await client.db("bwd28").collection("booking").find({}).toArray();
     booked?
     response.status(200).send(booked):
     response.status(400).send({message:"Server down"})
 })
 //booking room details using get method//
 app.get("/book_room",async(request,response)=>{
-    const room= await client.db("Elite").collection("rooms").find({}).toArray();
+    const room= await client.db("bwd28").collection("rooms").find({}).toArray();
     room?
     response.status(200).send(room):
     response.status(400).send({message:"Server down"})
